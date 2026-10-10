@@ -1,0 +1,134 @@
+{
+    "builder": {
+        "steps": [
+            "pack",
+            "copy",
+            "build"
+        ],
+        "refs": {
+            "tpl": "site/tpl",
+            "js": "site/js",
+            "css": "site/css"
+        },
+        "pack": {
+            "type": "command",
+            "condition": {
+                "type": "flag",
+                "name": "mode",
+                "value": "prod"
+            },
+            "run": [ "go", "run", "scripts/packer/main.go" ]
+        },
+        "copy": {
+            "type": "copy",
+            "condition": {
+                "type": "flag",
+                "name": "mode",
+                "value": "dev"
+            },
+            "files": [
+                {
+                    "type": "js",
+                    "ref": "main",
+                    "dest": "public/static/"
+                },
+                {
+                    "type": "css",
+                    "ref": "main",
+                    "dest": "public/static/"
+                }
+            ]
+        },
+        "build": {
+            "type": "html",
+            "base-ref": "main",
+            "out": "public/index.html",
+            "tokens": [
+                {
+                    "token": "__TPL_HEAD__",
+                    "type": "tpl",
+                    "ref": "head"
+                },
+                {
+                    "token": "__GOOGLE_ANALYTICS__",
+                    "type": "tpl",
+                    "ref": "ga"
+                },
+                {
+                    "token": "__GOOGLE_TAG__",
+                    "type": "value",
+                    "location": "config",
+                    "key": "google_tag"
+                },
+                {
+                    "token": "__TPL_HEADER__",
+                    "type": "tpl",
+                    "ref": "header-menu"
+                },
+                {
+                    "token": "__STYLESHEET_FILE__",
+                    "type": "flag",
+                    "name": "mode",
+                    "values": [
+                        { "value": "prod", "type": "filename", "location": "/static/main.min.css", "ts": true },
+                        { "values": [ "dev", "local" ], "type": "filename", "location": "/static/main.css", "ts": true }
+                    ]
+                },
+                {
+                    "token": "__VUE__",
+                    "type": "flag",
+                    "name": "mode",
+                    "values": [
+                        { "value": "prod", "type": "tpl", "ref": "vue-prod" },
+                        { "value": "dev", "type": "tpl", "ref": "vue" },
+                        { "value": "local", "type": "tpl", "ref": "vue" }
+                    ]
+                },
+                {
+                    "token": "__TPL_FOOTER__",
+                    "type": "tpl",
+                    "ref": "footer"
+                },
+                {
+                    "token": "__SPRITE_COORDS_DATA__",
+                    "type": "file",
+                    "location": "data/common/map-coords.json"
+                },
+                {
+                    "token": "__FORMAT_SEASON_DATA__",
+                    "type": "file",
+                    "location": "data/common/info.json"
+                },
+                {
+                    "token": "__SITES_NAV_DATA__",
+                    "type": "file",
+                    "location": "data/common/sites-nav.json"
+                },
+                {
+                    "token": "__SCRIPT_FILE__",
+                    "type": "flag",
+                    "name": "mode",
+                    "values": [
+                        { "value": "prod", "type": "filename", "location": "/static/main.min.js", "ts": true },
+                        { "values": [ "dev", "local" ], "type": "filename", "location": "/static/main.js", "ts": true }
+                    ]
+                },
+                {
+                    "token": "__NAME_CORRECTION__",
+                    "type": "tpl",
+                    "ref": "name-corrections"
+                }
+            ]
+        }
+    },
+    "packer": {
+        "tpl_dir": "site",
+        "out_dir": "public/static",
+        "css": {
+            "css/main.css": "main.min.css"
+        },
+        "js": {
+            "js/main.js": "main.min.js"
+        }
+    }
+}

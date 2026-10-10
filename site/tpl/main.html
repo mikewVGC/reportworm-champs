@@ -1,0 +1,693 @@
+__TPL_HEAD__
+
+<body>
+
+<main id="app">
+
+    <nav id="sites-nav">
+        <input type="checkbox" id="menu-toggle" aria-label="Toggle Menu" />
+        <label for="menu-toggle" class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <div class="nav-items">
+        <div v-for="site in sitesNav" :class="{ active: site.active }">
+            <a :href="`${site.url}`" v-html="site.name" data-pass="1" target="_blank"></a>
+        </div>
+        </div>
+    </nav>
+
+    __TPL_HEADER__
+
+    <component
+        :is="currentView"
+        v-bind="currentProps"
+        @search="search"
+    ></component>
+
+    __TPL_FOOTER__
+
+</main>
+
+<template id="loading-template">
+
+    <div id="loading">
+        <h2>Loading Data</h2>
+        <p>It'll be ready in just a moment...</p>
+    </div>
+
+</template>
+
+<template id="home-template">
+
+    <h1><em>Pokemon Champions</em> Combined VGC Stats</h1>
+
+    <p>Welcome to <strong>Reportworm Champs</strong>, which has aggregate stats and information for every <em>Pokemon Champions</em> VGC major event. This is a companion site for <strong><a href="https://standings.reportworm.com" target="_blank" data-pass="1">Reportworm Standings</a></strong>, which has individual standings and Pokemon stats for all open teamsheet events from <em>Pokemon Champions</em> as well as the entire history of <em>Scarlet &amp; Violet</em> events.</p>
+
+    <p>Explore the sections in the menu above to see everything!</p>
+
+    <div class="main-info-box">
+
+        <h2>About VGC In <em>Pokemon Champions</em></h2>
+
+        <h3>Game Mechanics</h3>
+
+        <p>As the new home of VGC, <em>Pokemon Champions</em> is intended to support multiple game mechanics. The first two seasons (2026 and 2027) featured Mega Evolution, where certain Pokemon can hold a mega stone and use it to evolve into a more powerful form during battles.</p>
+
+        <h3>Event Format</h3>
+
+        <p>Official events are held using a double battle format where you have a team of six and select four to bring to each battle. All events utilized a best of three format where players face off in a Swiss style tournament in order to qualify for the single elimination Top Cut bracket.</p>
+
+        <h3>Open Teamsheets</h3>
+
+        <p>Since <em>Scarlet &amp; Violet</em> in 2023 all official events have used open teamsheets, or 'OTS'. In this format, each player is provided with a sheet detailing their opponent's team, including Pokemon abilities, their held items, all of their moves, and their stat alignment (also known as nature).</p>
+
+        <h3>World Champions</h3>
+
+        <p>At the end of the 2026 season we crowned our first <em>Pokemon Champions</em> World Champion, Takuma Yamazaki from Japan.</p>
+
+    </div>
+
+    <h2 @click="toggleCredits()" id="creditsTitle">
+        Site Credits 
+        <span v-if="!showCredits" v-cloak>&#9656;</span>
+        <span v-if="showCredits" v-cloak>&#9662;</span>
+    </h2>
+
+    <ul v-if="showCredits" v-cloak>
+        <li><p>Programming and site design is by <a href="https://bsky.app/profile/mikew.reportworm.com" target="_blank" data-pass="1">Mike W</a>, who you can find on BlueSky, I guess (I also have <a href="http://twitter.com/mikewVGC" target="_blank" data-pass="1">a Twitter</a>). A few VGC projects (including this one) can be found <a href="https://github.com/mikewVGC" target="_blank" data-pass="1">on my Github</a>.</p></li>
+
+        <li><p>Match data provided by <a href="https://rk9.gg" target="_blank" data-pass="1">RK9 Labs</a>, <a href="https://playlatam.net" target="_blank" data-pass="1">Playlatam</a>, and <a href="https://www.pokedata.ovh" target="_blank" data-pass="1">Pokedata</a>.</p></li>
+
+        <li><p>The wonderful Reportworm logo is by <a href="https://twitter.com/Chufflepop" target="_blank" data-pass="1">Chufflepop</a>.</p></li>
+
+        <li><p>Small sprites come from <a href="https://play.pokemonshowdown.com/" target="_blank" data-pass="1">Pokemon Showdown</a> (specifically the <a href="https://github.com/smogon/sprites" target="_blank" data-pass="1">smogon/sprites</a> repo), and larger art is official Pokemon art, which has been helpfully collected in the <a href="https://github.com/PokeAPI/sprites" target="_blank" data-pass="1">PokeAPI/sprites</a> repository.</p></li>
+
+        <li><p>This site uses <a href="https://vuejs.org" target="_blank" data-pass="1">Vue.js</a> for the front-end.</p></li>
+
+        <li><p>Reportworm proudly contains 0% AI generated code, and is made in New York. You can check out the <a href="https://github.com/mikewVGC/reportworm-champs" data-pass="1">the Github repo</a> if you're interested.</p></li>
+    </ul>
+
+</template>
+
+<template id="mons-stats-template">
+
+    <h2>Pokemon Stats &mdash; {{ monsTimeframeStr() }}</h2>
+
+    <ul class="top-menu">
+        <li><strong>View By Format:</strong></li>
+
+        <li>
+            <select @change="updateMonsFilter" name="useRuleset" :value="monsRuleset">
+                <option value="all">All Formats</option>
+                <option
+                    v-for="ruleset in rulesets"
+                    :value="`reg-${ruleset.toLowerCase()}`"
+                >Regulation {{ ruleset }}</option>
+            </select>
+        </li>
+
+        <li><strong>View By Season:</strong></li>
+        <li>
+            <select @change="updateMonsFilter" name="useSeason" :value="monsTimeframe">
+                <option value="all">All Seasons</option>
+                <option
+                    v-for="season in seasons"
+                    :value="season"
+                >{{ season }}</option>
+            </select>
+        </li>
+    </ul>
+
+    <p><strong>Unique Pokemon:</strong> {{ searchMons.length }}</p>
+
+    <div class="small-search-box">
+
+        <input
+            type="text"
+            id="monNameSearch"
+            placeholder="Search by name"
+            @input="searchForMons"
+            :value="monSearchStr"
+        />
+
+        <div
+            v-if="monSearchStr.length"
+            @click="clearMonSearch"
+        >&times;</div>
+
+    </div>
+
+    <table id="allmon-stats">
+        <thead>
+            <tr>
+                <th></th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('name')"
+                    @click="sortStats('name')"
+                >Name</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('total')"
+                    @click="sortStats('total')"
+                >Total</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('points')"
+                    @click="sortStats('points')"
+                >Points</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('phase2')"
+                    @click="sortStats('phase2')"
+                >Phase 2</th>
+                <th
+                    class="sortable"
+                    total:class="getSortedClass('phase2Conversion')"
+                    @click="sortStats('phase2Conversion')"
+                    title="Phase 2 Conversion Rate"
+                >Ph 2 Cnv</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('cut')"
+                    @click="sortStats('cut')"
+                >Top Cut</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('cutConversion')"
+                    @click="sortStats('cutConversion')"
+                    title="Top Cut Conversion Rate"
+                >Cut Cnv</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('wins')"
+                    @click="sortStats('wins')"
+                >Wins</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="mon in searchMons">
+                <td>
+                    <div
+                        class="monicon"
+                        :style="{ backgroundPosition: getSpritePos(mon.code) }"
+                    >{{ mon.name }}</div>
+                </td>
+                <td><a :href="`/mon/${mon.code}`">{{ mon.name }}</a></td>
+                <td>{{ mon.total.toLocaleString() }}</td>
+                <td>{{ mon.points.toLocaleString() }}</td>
+                <td>{{ mon.phase2.toLocaleString() }}</td>
+                <td>{{ getPct(mon.phase2Conversion) }}</td>
+                <td>{{ mon.cut.toLocaleString() }}</td>
+                <td>{{ getPct(mon.cutConversion) }}</td>
+                <td>{{ mon.wins.toLocaleString() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</template>
+
+<template id="mon-template">
+
+    <div
+        v-if="monLoaded"
+        class="mon-stats-container"
+        :style="{ backgroundImage: `url(https://reportworm-standings.us-east-1.linodeobjects.com/team-img/${monStats.dex}.png` }"
+    >
+
+        <h2>{{ monStats.name }} Usage</h2>
+
+        <div class="usage-col">
+
+            <h3>All-Time Stats &amp; Milestones</h3>
+
+            <table id="mon-milestones" class="two-col-info">
+                <tr>
+                    <td>Total Teams</td>
+                    <td>{{ monStats.total }}</td>
+                </tr>
+                <tr>
+                    <td>Earning Points</td>
+                    <td>{{ monStats.points }}</td>
+                </tr>
+                <tr>
+                    <td>Made Phase 2</td>
+                    <td>{{ monStats.phase2 }}</td>
+                </tr>
+                <tr>
+                    <td>Made Top Cut</td>
+                    <td>{{ monStats.cut }}</td>
+                </tr>
+                <tr>
+                    <td>Event Wins</td>
+                    <td>{{ monStats.wins }}</td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="usage-col">
+
+            <h3>Strongest Soldiers</h3>
+
+            <table id="mon-soldiers" class="two-col-info">
+                <tr v-for="player in monStats.soldiers">
+                    <td>{{ player.count }}</td>
+                    <td><a :href="`/player/${player.code}`">{{ player.name }}</a></td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="usage-col">
+
+            <h3>Top Items</h3>
+
+            <table id="mon-items" class="two-col-info mon-info">
+                <tr v-for="item in monStats.items">
+                    <td>
+                        <div
+                            class="monicon itemicon"
+                            :style="{ backgroundPosition: getSpritePos(item.code) }"
+                        ></div>
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ getPct(item.count / monStats.t) }}</td>
+                    <td>({{ item.count }})</td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+    <h2>Event Results for {{ monStats.name }}</h2>
+
+    <p class="note">Percentages are the overall representation in each category.</p>
+
+    <div class="table-filters">
+        <label>Season:</label>
+        <select @change="updateSeasonFilter" :value="resultsFilter.season">
+            <option value="all">All Seasons</option>
+            <option v-for="season in this.monSeasons" :value="season">{{ season }}</option>
+        </select>
+
+        <label>Regulation:</label>
+        <select @change="updateRegFilter" :value="resultsFilter.reg">
+            <option value="all">All Regulations</option>
+            <option v-for="regName in this.monRegs" :value="regName">{{ regName }}</option>
+        </select>
+    </div>
+
+    <table id="mon-events">
+        <thead>
+            <tr>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('order')"
+                    @click="sortEvents('order')"
+                >Event Name / Format<br /><span>Sorted by event date</span></th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('best_finish')"
+                    @click="sortEvents('best_finish')"
+                >Best<br />Finish</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('total')"
+                    @click="sortEvents('total')"
+                >Total</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('points')"
+                    @click="sortEvents('points')"
+                >Points</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('phase2')"
+                    @click="sortEvents('phase2')"
+                >Phase 2</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('cut')"
+                    @click="sortEvents('cut')"
+                >Top Cut</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="event in filteredEvents">
+                <td>
+                    <a
+                        :href="`https://standings.reportworm.com/${event.year}/${event.code}`"
+                        data-pass="1"
+                        target="_blank"
+                        class="external-link"
+                    >{{ event.name }}<div class="sm-icon ext-link-icon"></div></a> ({{ event.year }})<br />
+                    <em>{{ event.format }}</em>
+                </td>
+                <td>{{ event.best_finish }}</td>
+                <td>{{ event.total }} <span class="smpct">({{ getPct(event.totpct) }})</span></td>
+                <td>{{ event.points }} <span class="smpct">({{ getPct(event.ptspct) }})</span></td>
+                <td>{{ event.phase2 }} <span class="smpct">({{ getPct(event.p2pct) }})</span></td>
+                <td>{{ event.cut }} <span class="smpct">({{ getPct(event.cutpct) }})</span></td>
+            </tr>
+            <tr v-if="!filteredEvents.length" v-cloak>
+                <td colspan="6">No results for this criteria.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</template>
+
+<template id="players-list-template">
+
+    <h2><em>Pokemon Champions</em> Top Players</h2>
+
+    <p>This list only includes the most successful players in the <em>Pokemon Champions</em> era. A complete list of players can be found via <a href="/players/search">the player search</a>.</p>
+
+    <p>Since we're in the first full <em>Pokemon Champions</em> season this list will initially be sparse. As time goes on more players will qualify to show up here based on the criteria below.</p>
+
+    __NAME_CORRECTION__
+
+    <h3 @click="toggleTopPlayerCriteria()" id="top-player-toggle">
+        Top Player Criteria
+        <span v-if="!showTopPlayerCriteria" v-cloak>&#9656;</span>
+        <span v-if="showTopPlayerCriteria" v-cloak>&#9662;</span>
+    </h3>
+
+    <div v-if="showTopPlayerCriteria" id="top-player-criteria">
+        <p>The goal with this list is to reward overall consistency and strong results, so there are a number of different criteria that allow players to show up here. One or more of the following are required:</p>
+
+        <ol>
+            <li>Winning at least one event and getting Top Cut in at least two total events</li>
+            <li>Reach phase two in 60% of events for players who have played in 15 or more events</li>
+            <li>Reach phase two in 80% of events for players who have played in 5 or more events</li>
+            <li>Getting Top Cut in 25% of events for players who have played in 5 or more events</li>
+            <li>Players who have:</li>
+                <ul>
+                    <li>Played in at least 10 events</li>
+                    <li>Earned points at 90% of their events</li>
+                    <li>Made phase two at 50% of their events</li>
+                </ul>
+            <li>Finishing Top 8 in two or more events, while making Top Cut in least one event</li>
+        </ol>
+    </div>
+
+    <div class="small-search-box">
+
+        <input
+            type="text"
+            id="topPlayerSearch"
+            placeholder="Search by name"
+            @input="searchForTopPlayers"
+            :value="topPlayerSearchStr"
+        />
+
+        <div
+            v-if="topPlayerSearchStr.length"
+            @click="clearTopPlayerSearch"
+        >&times;</div>
+
+    </div>
+
+    <table id="players-list">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Player</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('total')"
+                    @click="sortPlayers('total')"
+                >Total</th>
+                <th colspan="2"
+                    class="sortable"
+                    :class="getSortedClass('points')"
+                    @click="sortPlayers('points')"
+                >Earned<br />Points</th>
+                <th colspan="2"
+                    class="sortable"
+                    :class="getSortedClass('phase2')"
+                    @click="sortPlayers('phase2')"
+                >Phase 2</th>
+                <th colspan="2"
+                    class="sortable"
+                    :class="getSortedClass('cut')"
+                    @click="sortPlayers('cut')"
+                >Cut</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('g_wins')"
+                    @click="sortPlayers('g_wins')"
+                >W</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('g_losses')"
+                    @click="sortPlayers('g_losses')"
+                >L</th>
+                <th
+                    class="sortable"
+                    :class="getSortedClass('best_finish')"
+                    @click="sortPlayers('best_finish')"
+                >Best<br />Finish</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="player in searchTopPlayers">
+                <td>
+                    <div
+                        class="monicon"
+                        :style="{ backgroundPosition: getSpritePos(player.mon) }"
+                    ></div>
+                </td>
+                <td><a :href="`/player/${player.code}`">{{ player.name }}</a></td>
+                <td>{{ player.total }}</td>
+                <td>{{ player.points }}</td>
+                <td><span class="smpct">({{ getPct(player.ptsPct) }})</span></td>
+                <td>{{ player.phase2 }}</td>
+                <td><span class="smpct">({{ getPct(player.ph2Pct) }})</span></td>
+                <td>{{ player.cut }}</td>
+                <td><span class="smpct">({{ getPct(player.cutPct) }})</span></td>
+                <td>{{ player.g_wins }}</td>
+                <td>{{ player.g_losses }}</td>
+                <td>{{ player.best_finish }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</template>
+
+<template id="players-search-template">
+
+    <h2><em>Pokemon Champions</em> Player Search</h2>
+
+    <p>Use the search box to look for any player who played in a <em>Pokemon Champions</em> major.</p>
+
+    __NAME_CORRECTION__
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="allPlayersSearch"
+            placeholder="Search by name"
+            @input="searchForPlayers"
+            :value="playerSearchStr"
+        />
+
+        <div
+            v-if="playerSearchStr.length"
+            @click="clearPlayerSearch"
+        >&times;</div>
+
+    </div>
+
+    <div class="search-results">
+
+        <h3 v-if="searchPlayers.length">
+            Results: <span>{{ searchPlayers.length }} players</span>
+        </h3>
+
+        <div class="player-search-row" v-for="player in searchPlayers">
+            <a :href="`/player/${player.code}`">
+                <strong>{{ player.name }}</strong><br />
+                <span>{{ player.total }} Events &mdash; <em>Most Recent:</em> {{ player.recent }}</span>
+                <span class="top-player-badge" v-if="player.top" v-cloak>Top Player</span>
+            </a>
+        </div>
+    </div>
+
+</template>
+
+<template id="player-template">
+
+    <h2>{{ player.name }} &mdash; Player Info</h2>
+
+    <div v-if="player.wins" class="winner-banner">
+        <p>Winner of <strong>{{ player.wins }}</strong> event<span v-if="player.wins > 1">s</span>!</p>
+    </div>
+
+    <div v-if="player.mons">
+
+        <div class="usage-col usage-col-player">
+
+            <h3>Player Info</h3>
+
+            <table id="player-info" class="two-col-info">
+                <tr>
+                    <td>Events Attended</td>
+                    <td>{{ player.total }}</td>
+                </tr>
+                <tr>
+                    <td>Earned Points</td>
+                    <td>{{ player.points }} <span class="smpct">({{ getPct(player.points / player.total) }})</span></td>
+                </tr>
+                <tr>
+                    <td>Made Phase 2</td>
+                    <td>{{ player.phase2 }} <span class="smpct">({{ getPct(player.phase2 / player.total) }})</span></td>
+                </tr>
+                <tr>
+                    <td>Top Cut</td>
+                    <td>{{ player.cut }} <span class="smpct">({{ getPct(player.cut / player.total) }})</span></td>
+                </tr>
+                <tr>
+                    <td>Best Finish</td>
+                    <td>{{ player.best_finish }}</td>
+                </tr>
+                <tr>
+                    <td>Total Points</td>
+                    <td>{{ player.pt_total }}</td>
+                </tr>
+                <tr>
+                    <td>Overall Record</td>
+                    <td>{{ player.g_wins }} - {{ player.g_losses }}</td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="usage-col usage-col-player">
+
+            <h3>Favorite Pokemon</h3>
+
+            <table id="favorite-mons" class="two-col-info">
+                <tr v-for="mon in player.mons">
+                    <td>{{ mon.total }}</td>
+                    <td>
+                        <div
+                            class="monicon"
+                            :style="{ backgroundPosition: getSpritePos(mon.code) }"
+                        ></div>
+                    </td>
+                    <td><a :href="`/mon/${mon.code}`">{{ mon.name }}</a></td>
+                </tr>
+            </table>
+
+        </div>
+
+    <div class="usage-col usage-col-player">
+        <h3>Rivals</h3>
+
+        <table id="rival-players" class="two-col-info">
+            <tr v-for="rival in player.rivals">
+                <td>({{ rival.wins }} - {{ rival.losses }})</td>
+                <td><a :href="`/player/${rival.code}`">{{ rival.name }}</a></td>
+            </tr>
+            <tr v-if="!player.rivals.length">
+                <td></td>
+                <td>No rivals... yet...</td>
+            </tr>
+        </table>
+    </div>
+
+    </div>
+
+    <h2>Event Results</h2>
+
+    <div class="table-filters">
+        <label>Filter Events:</label>
+        <select @change="filterPlayerEvents" :value="playerEventFilter">
+            <option value="all">All Events</option>
+            <option value="points">Earned Points</option>
+            <option value="phase2">Made Phase 2</option>
+            <option value="cut">Top Cut</option>
+        </select>
+    </div>
+
+    <table id="attended-events">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th colspan="2">Finish</th>
+                <th>Points</th>
+                <th colspan="3">Record</th>
+                <th>Team</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="event in filterEvents(player.events)">
+                <td>
+                    <a 
+                        :href="`https://standings.reportworm.com/${event.year}/${event.code}`"
+                        target="_blank"
+                        data-pass="1"
+                    >{{ event.name }}<div class="sm-icon ext-link-icon"></div></a><br />
+                    <span>{{ event.year }} &mdash; {{ event.format }}</span>
+                </td>
+                <td>{{ event.result }}</td>
+                <td><span class="smpct">of {{ event.players }}</span></td>
+                <td>{{ event.points }}</td>
+                <td>{{ event.w }}</td>
+                <td>-</td>
+                <td>{{ event.l }}</td>
+                <td>
+                    <a 
+                        :href="`https://standings.reportworm.com/${event.year}/${event.code}/player/${player.code}`"
+                        target="_blank"
+                        data-pass="1"
+                    >
+                        <div
+                            v-for="mon in event.team"
+                            class="monicon"
+                            :style="{ backgroundPosition: getSpritePos(mon) }"
+                        ></div>
+                    </a>
+                </td>
+            </tr>
+            <tr v-if="player.events && filterEvents(player.events).length < 1">
+                <td colspan="8">No events fit this criteria</td>
+            </tr>
+        </tbody>
+    </table>
+
+</template>
+
+<template id="events-template">
+
+    <h2></h2>
+
+    <p></p>
+
+</template>
+
+__VUE__
+
+<script type="module">
+import { createApp } from 'vue';
+import App from '__SCRIPT_FILE__';
+export default App;
+const app = createApp(App).mount('#app');
+
+app.setBootstrapData({
+    spriteCoords: JSON.parse('__SPRITE_COORDS_DATA__'),
+    info: JSON.parse('__FORMAT_SEASON_DATA__'),
+    sitesNav: JSON.parse('__SITES_NAV_DATA__'),
+});
+
+app.init();
+</script>
+
+</body>
+</html>

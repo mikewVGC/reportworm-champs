@@ -1,0 +1,15 @@
+[project]
+name = "reportworm-stats"
+version = "0.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "reportworm-builder",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.14",
+]
+
+[tool.uv.sources]
+reportworm-builder = { git = "https://github.com/mikewVGC/reportworm-builder.git" }

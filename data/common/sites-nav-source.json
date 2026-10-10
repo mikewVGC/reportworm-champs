@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Reportworm Home",
+        "url": "https://reportworm.com/"
+    },
+    {
+        "name": "Event Standings",
+        "url": "https://standings.reportworm.com/"
+    },
+    {
+        "name": "The Metagame",
+        "url": "https://meta.reportworm.com/"
+    },
+    {
+        "name": "<em>Champions</em> Stats",
+        "url": "https://champs.reportworm.com/",
+        "active": true
+    },
+    {
+        "name": "<em>Scarlet &amp; Violet</em> Stats",
+        "url": "https://svstats.reportworm.com/"
+    },
+    {
+        "name": "Replay Analysis",
+        "url": "https://reporter.reportworm.com/"
+    }
+]

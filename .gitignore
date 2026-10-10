@@ -1,0 +1,9 @@
+config.json
+public/data/*
+public/static/*.js
+public/static/*.css
+public/index.html
+venv
+.venv
+.ruff_cache
+__pycache__

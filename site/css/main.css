@@ -1,0 +1,1030 @@
+body {
+    font: 1.1em Helvetica, Arial, sans-serif;
+    background: #FFFFFF;
+    color: #000000;
+}
+
+a {
+    color: #0D47A1;
+}
+
+main#app {
+    max-width: 50em;
+    margin: auto;
+    position: relative;
+}
+
+nav#sites-nav {
+    font-size: .8em;
+    background: #F8F8F8;
+    border: 1px solid #000;
+    border-radius: .5em;
+    margin: .75em 0 1em 0;
+    text-align: center;
+}
+
+nav#sites-nav a {
+    color: #000;
+}
+
+nav#sites-nav div {
+    display: inline-block;
+}
+
+nav#sites-nav div.active {
+    background: #FFFFFF;
+    font-weight: bold;
+    border: 1px solid #444444;
+    border-top: 0;
+    border-bottom: 0;
+    border-radius: .5em .5em 0 0;
+    position: relative;
+    top: 1px;
+}
+
+nav#sites-nav div a {
+    display: block;
+    padding: .75em .75em;
+}
+
+nav#sites-nav div.active a {
+    text-decoration: none;
+}
+
+#menu-toggle {
+    display: none;
+}
+
+.menu-icon {
+    display: none;
+}
+
+header#header {
+    position: relative;
+}
+
+header#header a {
+    display: block;
+    height: 90%;
+    width: 100%;
+    max-width: 375px;
+}
+
+header#header h1 {
+    height: 160px;
+    margin: 0;
+    font-size: 0;
+    background-image: url(/static/img/logo-light.png);
+    background-repeat: no-repeat;
+    background-size: auto 170px;
+    background-position-y: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+footer {
+    text-align: center;
+    font-size: .8em;
+}
+
+footer p {
+    line-height: 1.6em;
+}
+
+[v-cloak] {
+    display: none !important;
+}
+
+input, select {
+    border: 1px solid #000000;
+    border-radius: .4em;
+    height: 1.75em;
+    font-size: 1em;
+    padding: .25em;
+    box-sizing: border-box;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+th, td {
+    padding: .3em .4em;
+}
+
+th {
+    background: #404048;
+    color: #FFFFFF;
+    text-align: left;
+    font-weight: bold;
+}
+
+tr {
+    border-bottom: 1px solid #A0A0A0;
+}
+
+tr:nth-child(odd) {
+    background: #E8E8E8;
+}
+
+td {
+    vertical-align: middle;
+}
+
+th.sortable {
+    background-image: url(/static/img/sort-unsorted.png);
+    background-repeat: no-repeat;
+    background-position: 90% 50%;
+    background-size: .75em;
+    padding-right: 1.5em;
+    cursor: pointer;
+}
+
+th.sortable.up {
+    background-image: url(/static/img/sort-up.png);
+}
+
+th.sortable.down {
+    background-image: url(/static/img/sort-down.png);
+}
+
+th span {
+    font-weight: normal;
+    font-size: .9em;
+    font-style: italic;
+}
+
+th {
+    white-space: nowrap;
+    text-wrap: nowrap;
+}
+
+nav#main-nav {
+    margin: -.55em 0 1em 0;
+    border: 1px solid #000;
+    background: #F8F8F8;
+    border-radius: .5em;
+    padding: .5em .75em;
+    font-size: 1.1em;
+}
+
+nav#main-nav div {
+    display: inline-block;
+    margin-right: 1em;
+    border-right: 1px solid #000;
+}
+
+nav#main-nav div:first-child,
+nav#main-nav div:last-child {
+    border-right: 0;
+}
+
+nav#main-nav div a {
+    display: block;
+    padding: .25em 1em .25em 0;
+}
+
+.sm-icon {
+    width: 16px;
+    height: 16px;
+    background-size: 14px 14px;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    display: inline-block;
+}
+
+.ext-link-icon {
+    background-image: url(/static/img/ext-link-light.png);
+    margin-left: .25em;
+}
+
+ul.top-menu {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+ul.top-menu li {
+    display: inline-block;
+    padding: .25em .75em .25em 0;
+    margin: .25em 0 .25em .75em;
+}
+
+ul.top-menu li:nth-child(odd) {
+    padding-right: 0;
+}
+
+ul.top-menu li:first-child {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+ul.top-menu li:nth-child(2) {
+    border-right: 1px solid #000;
+}
+
+.main-info-box {
+    background: #F8F8F8;
+    padding: 1em;
+    border: 1px solid #000;
+    border-radius: 1em;
+}
+
+.main-info-box h2 {
+    margin-top: .5em;
+}
+
+.note {
+    font-size: .9em;
+}
+
+.smpct {
+    font-size: .8em;
+    color: #555555;
+}
+
+#allmon-stats th {
+    white-space: nowrap;
+}
+
+#allmon-stats td {
+    text-align: right;
+}
+
+#allmon-stats td:first-child {
+    width: 36px;
+}
+
+#allmon-stats td:nth-child(2) {
+    text-align: left;
+}
+
+#allmon-stats td:last-child {
+    text-align: center;
+}
+
+.monicon, .itemicon, .hditemicon {
+    width: 36px;
+    height: 30px;
+    display: inline-block;
+    background: url(/static/img/pokemonicons-sheet.png?1) no-repeat;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -9999px;
+    image-rendering: pixelated;
+}
+
+.itemicon {
+    background-image: url(/static/img/itemicons-sheet.png?1);
+    width: 24px;
+    height: 24px;
+}
+
+.mon-stats-container {
+    background-repeat: no-repeat;
+    background-position: 5% 100%;
+    background-size: auto 260px;
+    padding-bottom: 2.5em;
+}
+
+.usage-col {
+    width: 35%;
+    min-height: 395px;
+    display: inline-block;
+    vertical-align: top;
+    padding-right: .5em;
+}
+
+ .usage-col.usage-col-player {
+    min-height: revert;
+ }
+
+.usage-col:last-child {
+    width: calc(28% - .1em);
+    padding-right: 0;
+}
+
+.usage-col h3 {
+    border-bottom: 1px solid #444;
+    padding: 0 0 .25em .25em;
+    margin: 0 0 .25em 0;
+    width: 90%;
+}
+
+#top-player-toggle {
+    cursor: pointer;
+}
+
+#top-player-criteria ol li {
+    padding: .2em 0;
+}
+
+table.two-col-info tr {
+    background: transparent;
+    border-bottom: 0px;
+}
+
+table.two-col-info tr td:nth-child(1) {
+    text-align: right;
+    width: 50%;
+    color: #666;
+    font-style: italic;
+}
+
+table#mon-milestones {
+    margin-bottom: 1.25em;
+}
+
+table#mon-soldiers {
+}
+
+table#mon-soldiers tr td:nth-child(1),
+table#favorite-mons tr td:nth-child(1) {
+    width: 15%;
+    text-align: right;
+}
+
+table#mon-soldiers tr td:nth-child(2) {
+    font-style: italic;
+}
+
+table.mon-info {
+    font-size: .9em;
+    margin-bottom: .75em;
+}
+
+table.mon-info tr td:first-child {
+    width: 24px;
+}
+
+table.mon-info td:nth-child(3),
+table.mon-info td:nth-child(4) {
+    text-align: right;
+}
+
+table.mon-info td:nth-child(4) {
+    font-size: .9em;
+    color: #404040;
+}
+
+table#favorite-mons tr td:nth-child(2) {
+    width: 36px;
+}
+
+table#rival-players td {
+    height: 36px;
+}
+
+table#rival-players td:first-child {
+    width: 30%;
+}
+
+table#attended-events th {
+    text-align: right;
+}
+
+table#attended-events th:first-child,
+table#attended-events th:nth-child(2),
+table#attended-events th:last-child {
+    text-align: left;
+}
+
+table#attended-events td {
+    text-align: right;
+}
+
+table#attended-events td:first-child,
+table#attended-events td:nth-child(3) {
+    text-align: left;
+}
+
+table#attended-events tr td:last-child {
+    width: 216px;
+}
+
+table#attended-events tr td:last-child a {
+    display: block;
+}
+
+table#attended-events span {
+    font-size: 0.9em;
+}
+
+.table-filters {
+    margin-bottom: .5em;
+}
+
+.table-filters label {
+    margin-right: .25em;
+}
+
+.table-filters select {
+    margin-right: 1em;
+}
+
+table#players-list th {
+    vertical-align: bottom;
+}
+
+table#players-list td {
+    text-align: right;
+}
+
+table#players-list td:first-child {
+    width: 36px;
+}
+
+table#players-list td:nth-child(4),
+table#players-list td:nth-child(6),
+table#players-list td:nth-child(8) {
+    padding-right: 0;
+}
+
+table#players-list td:nth-child(5),
+table#players-list td:nth-child(7),
+table#players-list td:nth-child(9) {
+    text-align: left;
+}
+
+table#players-list td:last-child {
+    text-align: center;
+}
+
+table#players-list td:nth-child(2) {
+    text-align: left;
+}
+
+.small-search-box {
+    padding-bottom: .5em;
+}
+
+.small-search-box div {
+    display: inline-block;
+    padding-left: .5em;
+}
+
+.winner-banner {
+    font-size: 1.2em;
+    text-align: center;
+    border-top: 1px solid #404040;
+    border-bottom: 1px solid #404040;
+    margin: 0 0 1em 0;
+    background: #FFFFFF;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(250, 244, 165, 1) 15%, rgba(250, 244, 165, 1) 85%, rgba(255, 255, 255, 1) 100%);
+    color: #695200;
+}
+
+.search-results {
+    min-height: 8em;
+}
+
+.search-results h3 span {
+    font-weight: normal;
+    color: #686868;
+    font-size: .9em;
+}
+
+.player-search-row {
+    padding: .5em .25em;
+    border-bottom: 1px solid #A8A8A8;
+    margin: .25em 0;
+}
+
+.player-search-row a {
+    text-decoration: none;
+}
+
+.player-search-row strong {
+    text-decoration: underline;
+}
+
+.player-search-row span {
+    font-size: .85em;
+    color: #606060;
+}
+
+.top-player-badge {
+    display: inline-block;
+    padding: .1em .5em;
+    margin-left: .5em;
+    background: #FFDC17;
+    color: #544908 !important;
+    font-weight: bold;
+    border-radius: .25em;
+}
+
+.search-box {
+    margin-top: 1em;
+}
+
+.search-box input {
+    height: 2.5em;
+    width: 65%;
+    font-size: 1.1em;
+}
+
+.search-box div {
+    display: inline-block;
+    font-size: 1.5em;
+    padding: 0 .25em;
+    cursor: pointer;
+}
+
+.info-box {
+    background: #B8EEFC;
+    color: #254852;
+    border: 1px solid #254852;
+    border-radius: .2em;
+    padding: .5em;
+    margin-top: .5em;
+}
+
+/* this is like 800px display? ... works for sideways phones */
+@media (max-width: 50.5em) {
+}
+
+/* mobile */
+@media (max-width: 40.5em) {
+    nav {
+        background: transparent;
+        border: 0;
+    }
+
+    nav#main-nav div {
+        padding: 0 .1em;
+        margin: 0;
+        font-size: .9em;
+    }
+
+    nav#main-nav div:first-child {
+        display: none;
+    }
+
+    nav#main-nav div a {
+        padding: 0 .15em;
+        margin: 0;
+    }
+
+    nav#sites-nav {
+        margin: .5em;
+        padding: .5em .25em;
+        border-radius: .25em;
+    }
+
+    nav#sites-nav a {
+    }
+
+    nav#sites-nav div {
+        display: block;
+        text-align: left;
+    }
+
+    nav#sites-nav .nav-items {
+        display: none;
+    }
+
+    nav#sites-nav div.active {
+        border-radius: 0;
+        border: 0;
+        border-top: 1px solid #000000;
+        border-bottom: 1px solid #000000;
+    }
+
+    nav#sites-nav div a {
+    }
+
+    nav#sites-nav div.active a {
+    }
+
+    .menu-icon {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        width: 30px;
+    }
+
+    .menu-icon span {
+        height: 3.5px;
+        width: 100%;
+        background-color: #333;
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+
+    #menu-toggle:checked ~ .nav-items {
+        display: block;
+    }
+
+    #menu-toggle:checked + .menu-icon span:nth-child(1) {
+      transform: rotate(45deg) translate(7px, 5px);
+    }
+
+    #menu-toggle:checked + .menu-icon span:nth-child(2) {
+      opacity: 0;
+    }
+
+    #menu-toggle:checked + .menu-icon span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -5px);
+    }
+
+    ul.top-menu li {
+        display: inline-block;
+        width: calc(50% - .5em);
+        border: 0 !important;
+        margin: 0;
+        padding: .25em !important;
+    }
+
+    ul.top-menu li:nth-child(odd) {
+        text-align: right;
+    }
+
+    #allmon-stats thead {
+        display: none;
+    }
+
+    #allmon-stats tr {
+        display: block;
+        position: relative;
+        padding: .25em .15em;
+    }
+
+    #allmon-stats td {
+        display: inline-block;
+        text-align: center;
+        padding: .1em .25em;
+        margin: .1em .15em;
+    }
+
+    #allmon-stats td::before {
+        font-size: .7em;
+        display: block;
+        color: #444;
+    }
+
+    #allmon-stats td:nth-child(2)::before {
+        content: "Name";
+    }
+
+    #allmon-stats td:nth-child(2) {
+        width: calc(90% - 50px);
+    }
+
+    #allmon-stats td:nth-child(3)::before {
+        content: "Total";
+    }
+
+    #allmon-stats td:nth-child(3) {
+        position: absolute;
+        right: 0;
+    }
+
+    #allmon-stats td:nth-child(4)::before {
+        content: "Points";
+    }
+
+    #allmon-stats td:nth-child(5)::before {
+        content: "Phase 2";
+    }
+
+    #allmon-stats td:nth-child(6)::before {
+        content: "Ph2 Cnv.";
+    }
+
+    #allmon-stats td:nth-child(7)::before {
+        content: "Top Cut";
+    }
+
+    #allmon-stats td:nth-child(8)::before {
+        content: "Cut Cnv.";
+    }
+
+    #allmon-stats td:nth-child(9)::before {
+        content: "Wins";
+    }
+
+    .usage-col {
+        width: 100%;
+        vertical-align: top;
+        padding: 0;
+        min-height: revert;
+    }
+
+    .usage-col:last-child {
+        width: 100%;
+    }
+
+    table#mon-soldiers {
+        margin-bottom: 1.25em;
+    }
+
+    .mon-stats-container {
+        background: transparent !important;
+        padding: 0;
+    }
+
+    .table-filters label {
+        width: 30%;
+        text-align: right;
+        display: inline-block;
+        margin-bottom: .2em;
+    }
+
+    .table-filters select {
+        width: 50%;
+        margin-right: 10%;
+        margin-bottom: .2em;
+    }
+
+    #mon-events thead {
+        display: none;
+    }
+
+    #mon-events tr {
+        display: block;
+        position: relative;
+    }
+
+    #mon-events td {
+        display: inline-block;
+        text-align: center;
+        font-size: .9em;
+    }
+
+    #mon-events td::before {
+        font-size: .7em;
+        display: block;
+        color: #444;
+    }
+
+    #mon-events td:nth-child(1)::before {
+        content: "Event Info";
+    }
+
+    #mon-events td:nth-child(1) {
+        text-align: left;
+        width: 100%;
+    }
+
+    #mon-events td:nth-child(2)::before {
+        content: "Best Finish";
+    }
+
+    #mon-events td:nth-child(2) {
+        position: absolute;
+        right: 5px;
+        top: 0px;
+        font-size: 1.1em;
+    }
+
+    #mon-events td:nth-child(3)::before {
+        content: "Total";
+    }
+
+    #mon-events td:nth-child(4)::before {
+        content: "Points";
+    }
+
+    #mon-events td:nth-child(5)::before {
+        content: "Phase 2";
+    }
+
+    #mon-events td:nth-child(6)::before {
+        content: "Top Cut";
+    }
+
+    #attended-events thead {
+        display: none;
+    }
+
+    #attended-events tr {
+        display: block;
+        position: relative;
+    }
+
+    table#attended-events td {
+        display: inline-block;
+        text-align: center;
+    }
+
+    #attended-events td::before {
+        font-size: .7em;
+        display: block;
+        color: #444;
+        text-align: center;
+    }
+
+    #attended-events td:nth-child(2)::before {
+        content: "Result";
+    }
+
+    #attended-events td:nth-child(3) {
+        display: none;
+    }
+
+    #attended-events td:nth-child(4)::before {
+        content: "Points";
+    }
+
+    #attended-events td:nth-child(5)::before {
+        content: "W";
+    }
+
+    #attended-events td:nth-child(6) {
+        display: none;
+    }
+
+    #attended-events td:nth-child(7)::before {
+        content: "L";
+    }
+
+    table#attended-events td:nth-child(8)::before {
+        content: "Team";
+        text-align: left;
+    }
+
+    table#attended-events td:nth-child(8) {
+        text-align: left;
+    }
+
+    table#players-list thead {
+        display: none;
+    }
+
+    table#players-list tr {
+        display: block;
+    }
+
+    table#players-list td {
+        display: inline-block;
+        text-align: center;
+    }
+
+    table#players-list td::before {
+        font-size: .7em;
+        display: block;
+        color: #444;
+        text-align: center;
+    }
+
+    table#players-list td:nth-child(1)::before,
+    table#players-list td:nth-child(2)::before,
+    table#players-list td:nth-child(1),
+    table#players-list td:nth-child(2) {
+        text-align: left;
+    }
+
+    table#players-list td:nth-child(2)::before {
+        content: "Name";
+    }
+
+    table#players-list td:nth-child(2) {
+        width: calc(100% - 75px);
+    }
+
+    table#players-list td:nth-child(n + 3) {
+        padding: .1em .6em;
+    }
+
+    table#players-list td:nth-child(3)::before {
+        content: "Events";
+    }
+
+    table#players-list td:nth-child(4)::before {
+        content: "Points";
+    }
+
+    table#players-list td:nth-child(5) {
+        display: none;
+    }
+
+    table#players-list td:nth-child(6)::before {
+        content: "Phase 2";
+    }
+
+    table#players-list td:nth-child(7) {
+        display: none;
+    }
+
+    table#players-list td:nth-child(8)::before {
+        content: "Cut";
+    }
+
+    table#players-list td:nth-child(9) {
+        display: none;
+    }
+
+    table#players-list td:nth-child(10)::before {
+        content: "W";
+    }
+
+    table#players-list td:nth-child(11)::before {
+        content: "L";
+    }
+
+    table#players-list td:nth-child(12)::before {
+        content: "Best";
+    }
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #212121;
+        color: #FFFFFF;
+    }
+
+    a {
+        color: #4FC3F7;
+    }
+
+    nav#sites-nav, nav#main-nav {
+        background: #303038;
+        border: 1px solid #88888A;
+    }
+
+    nav#sites-nav a {
+        color: #FFFFFF;
+    }
+
+    nav#main-nav div {
+        border-right: 1px solid #E8E8E8;
+    }
+
+    nav#sites-nav div.active {
+        background: #212121;
+        font-weight: bold;
+        border: 1px solid #88888A;
+        border-top: 0;
+        border-bottom: 0;
+    }
+
+    input {
+        background-color: #606060;
+        color: #E8E8E8;
+    }
+
+    th {
+        background: #404048;
+        color: #FFFFFF;
+    }
+
+    tr {
+        border-bottom: 1px solid #777777;
+    }
+
+    tr:nth-child(odd) {
+        background: #2E2E34;
+    }
+
+    header#header h1 {
+        background-image: url(/static/img/logo-dark.png);
+    }
+
+    .main-info-box {
+        background: #404040;
+        border: 1px solid #888888;
+    }
+
+    .smpct {
+        color: #CCCCCC;
+    }
+
+    table.two-col-info tr td:nth-child(1) {
+        color: #BBB;
+    }
+
+    table.mon-info td:nth-child(4) {
+        color: #CCCCCC;
+    }
+
+    .search-results h3 span {
+        color: #BBBBBB;
+    }
+
+    .player-search-row span {
+        color: #CCCCCC;
+    }
+
+    .winner-banner {
+        background: #222222;
+        background: linear-gradient(90deg, rgba(34, 34, 34, 1) 0%, rgba(250, 244, 165, 1) 15%, rgba(250, 244, 165, 1) 85%, rgba(34, 34, 34, 1) 100%);
+    }
+
+    .ext-link-icon {
+        background-image: url(/static/img/ext-link-dark.png);
+    }
+
+    /* mobile dark mode */
+    @media (max-width: 30.5em) {
+        table#players-list td::before,
+        #attended-events td::before,
+        #allmon-stats td::before,
+        #mon-events td::before {
+            color: #DDD;
+        }
+    }
+}
