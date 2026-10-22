@@ -33,14 +33,6 @@ def main():
         print("Could not find config.json, exiting")
         return
 
-    try:
-        with open("data/common/sites-nav-source.json") as file:
-            sites_nav = json.loads(file.read())
-            with open("data/common/sites-nav.json", "w") as ofile:
-                ofile.write(json.dumps(sites_nav, separators=(',', ':')))
-    except FileNotFoundError:
-        print("Couldn't open sites-nav-source.json")
-
     if ('mode' in config and config['mode'] == 'prod') or cl.prod:
         prod_mode = True
 

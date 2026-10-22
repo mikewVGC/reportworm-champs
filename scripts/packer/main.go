@@ -27,13 +27,15 @@ func main() {
 	}
 
 	buildInfo := make(map[string]interface{})
-    jsonErr := json.Unmarshal(buildData, &buildInfo)
-    if jsonErr != nil {
-    	log.Printf("JSON parse error (build.json): %s", jsonErr)
-    }
+	jsonErr := json.Unmarshal(buildData, &buildInfo)
+	if jsonErr != nil {
+		log.Printf("JSON parse error (build.json): %s", jsonErr)
+	}
 
-    cssFiles := buildInfo["css"].(map[string]interface{})
-    jsFiles := buildInfo["js"].(map[string]interface{})
+	packInfo := buildInfo["packer"].(map[string]interface{})
+
+	cssFiles := packInfo["css"].(map[string]interface{})
+	jsFiles := packInfo["js"].(map[string]interface{})
 
 	m = minify.New()
 	m.AddFunc("text/css", css.Minify)
@@ -42,8 +44,8 @@ func main() {
 	log.Printf("Minifying CSS")
 	for inCssFile, outCssFile := range cssFiles {
 		loadAndMinify(
-			fmt.Sprintf("%s/%s", buildInfo["tpl_dir"], inCssFile),
-			fmt.Sprintf("%s/%s", buildInfo["out_dir"], outCssFile),
+			fmt.Sprintf("%s/%s", packInfo["tpl_dir"], inCssFile),
+			fmt.Sprintf("%s/%s", packInfo["out_dir"], outCssFile),
 			"text/css",
 		)
 	}
@@ -51,8 +53,8 @@ func main() {
 	log.Printf("Minifying JS")
 	for inJsFile, outJsFile := range jsFiles {
 		loadAndMinify(
-			fmt.Sprintf("%s/%s", buildInfo["tpl_dir"], inJsFile),
-			fmt.Sprintf("%s/%s", buildInfo["out_dir"], outJsFile),
+			fmt.Sprintf("%s/%s", packInfo["tpl_dir"], inJsFile),
+			fmt.Sprintf("%s/%s", packInfo["out_dir"], outJsFile),
 			"application/javascript",
 		)
 	}
