@@ -209,7 +209,7 @@ image_alts = {
     "excadrillmega": 10287,
     "scolipedemega": 10288,
     "scraftymega": 10289,
-    "eeletrossmega": 10290,
+    "eelektrossmega": 10290,
     "chandeluremega": 10291,
     "chesnaughtmega": 10292,
     "delphoxmega": 10293,
@@ -251,4 +251,254 @@ image_alts = {
 def get_mon_alt_from_code(mon_code:str) -> int | None:
     if mon_code in image_alts:
         return image_alts[mon_code]
+    return None
+
+
+"""
+For when we want to display the fancy form icon!
+
+These are forms that change in battle -- such as zacian... mons like palkia-orgin
+or ogerpon change when the item is given to them, not during battle, so they get
+put on the teamsheets as palkia-origin or ogerpon-wellspring whereas zacian is
+on teamsheets as just base zacian holding the rusted sword.
+"""
+item_change_forms = {
+    # zacian / zam
+    "zacian": [{ "item": "Rusted Sword", "form": "zaciancrowned" }],
+    "zamazenta": [{ "item": "Rusted Shield", "form": "zamazentacrowned" }],
+
+    # megas
+    "venusaur": [{ "item": "Venusaurite", "form": "venusaurmega" }],
+    "charizard": [
+        { "item": "Charizardite X", "form": "charizardmegax" },
+        { "item": "Charizardite Y", "form": "charizardmegay" },
+    ],
+    "blastoise": [{ "item": "Blastoisinite", "form": "blastoisemega" }],
+    "alakazam": [{ "item": "Alakazite", "form": "alakazammega" }],
+    "gengar": [{ "item": "Gengarite", "form": "gengarmega" }],
+    "kangaskhan": [{ "item": "Kangaskhanite", "form": "kangaskhanmega" }],
+    "pinsir": [{ "item": "Pinsirite", "form": "pinsirmega" }],
+    "gyarados": [{ "item": "Gyaradosite", "form": "gyaradosmega" }],
+    "aerodactyl": [{ "item": "Aerodactylite", "form": "aerodactylmega" }],
+    "mewtwo": [
+        { "item": "Mewtwonite X", "form": "mewtwomegax" },
+        { "item": "Mewtwonite Y", "form": "mewtwomegay" },
+    ],
+    "ampharos": [{ "item": "Ampharosite", "form": "ampharosmega" }],
+    "scizor": [{ "item": "Scizorite", "form": "scizormega" }],
+    "heracross": [{ "item": "Heracronite", "form": "heracrossmega" }],
+    "houndoom": [{ "item": "Houndoominite", "form": "houndoommega" }],
+    "tyranitar": [{ "item": "Tyranitarite", "form": "tyranitarmega" }],
+    "blaziken": [{ "item": "Blazikenite", "form": "blazikenmega" }],
+    "gardevoir": [{ "item": "Gardevoirite", "form": "gardevoirmega" }],
+    "mawile": [{ "item": "Mawilite", "form": "mawilemega" }],
+    "aggron": [{ "item": "Aggronite", "form": "aggronmega" }],
+    "medicham": [{ "item": "Medichamite", "form": "medichammega" }],
+    "manectric": [{ "item": "Manectite", "form": "manectricmega" }],
+    "banette": [{ "item": "Banettite", "form": "banettemega" }],
+    "absol": [
+        { "item": "Absolite", "form": "absolmega" },
+        { "item": "Absolite Z", "form": "absolmegaz" }
+    ],
+    "garchomp": [
+        { "item": "Garchompite", "form": "garchompmega" },
+        { "item": "Garchompite Z", "form": "garchompmegaz" },
+    ],
+    "lucario": [
+        { "item": "Lucarionite", "form": "lucariomega" },
+        { "item": "Lucarionite Z", "form": "lucariomegaz" },
+    ],
+    "abomasnow": [{ "item": "Abomasite", "form": "abomasnowmega" }],
+    "latios": [{ "item": "Latiosite", "form": "latiosmega" }],
+    "latias": [{ "item": "Latiasite", "form": "latiasmega" }],
+    "swampert": [{ "item": "Swampertite", "form": "swampertmega" }],
+    "sceptile": [{ "item": "Sceptilite", "form": "sceptilemega" }],
+    "sableye": [{ "item": "Sablenite", "form": "sableyemega" }],
+    "altaria": [{ "item": "Altarianite", "form": "altariamega" }],
+    "gallade": [{ "item": "Galladite", "form": "gallademega" }],
+    "audino": [{ "item": "Audinite", "form": "audinomega" }],
+    "sharpedo": [{ "item": "Sharpedonite", "form": "sharpedomega" }],
+    "slowbro": [{ "item": "Slowbronite", "form": "slowbromega" }],
+    "steelix": [{ "item": "Steelixite", "form": "steelixmega" }],
+    "pidgeot": [{ "item": "Pidgeotite", "form": "pidgeotmega" }],
+    "glalie": [{ "item": "Glalitite", "form": "glaliemega" }],
+    "diancie": [{ "item": "Diancite", "form": "dianciemega" }],
+    "metagross": [{ "item": "Metagrossite", "form": "metagrossmega" }],
+    "kyogre": [{ "item": "Blue Orb", "form": "kyogreprimal" }],
+    "groudon": [{ "item": "Red Orb", "form": "groudonprimal" }],
+    "camerupt": [{ "item": "Cameruptite", "form": "cameruptmega" }],
+    "lopunny": [{ "item": "Lopunnite", "form": "lopunnymega" }],
+    "salamence": [{ "item": "Salamencite", "form": "salamencemega" }],
+    "beedrill": [{ "item": "Beedrillite", "form": "beedrillmega" }],
+    "clefable": [{ "item": "Clefablite", "form": "clefablemega" }],
+    "victreebel": [{ "item": "Victreebelite", "form": "victreebelmega" }],
+    "starmie": [{ "item": "Starminite", "form": "starmiemega" }],
+    "dragonite": [{ "item": "Dragoninite", "form": "dragonitemega" }],
+    "meganium": [{ "item": "Meganiumite", "form": "meganiummega" }],
+    "feraligatr": [{ "item": "Feraligite", "form": "feraligatrmega" }],
+    "skarmory": [{ "item": "Skarmorite", "form": "skarmorymega" }],
+    "froslass": [{ "item": "Froslassite", "form": "froslassmega" }],
+    "emboar": [{ "item": "Emboarite", "form": "emboarmega" }],
+    "excadrill": [{ "item": "Excadrite", "form": "excadrillmega" }],
+    "scolipede": [{ "item": "Scolipite", "form": "scolipedemega" }],
+    "scrafty": [{ "item": "Scraftinite", "form": "scraftymega" }],
+    "eelektross": [{ "item": "Eelektrossite", "form": "eelektrossmega" }],
+    "chandelure": [{ "item": "Chandelurite", "form": "chandeluremega" }],
+    "chesnaught": [{ "item": "Chesnaughtite", "form": "chesnaughtmega" }],
+    "delphox": [{ "item": "Delphoxite", "form": "delphoxmega" }],
+    "greninja": [{ "item": "Greninjite", "form": "greninjamega" }],
+    "pyroar": [{ "item": "Pyroarite", "form": "pyroarmega" }],
+    "floetteeternal": [{ "item": "Floettite", "form": "floettemega" }],
+    "malamar": [{ "item": "Malamarite", "form": "malamarmega" }],
+    "barbaracle": [{ "item": "Barbaracite", "form": "barbaraclemega" }],
+    "dragalge": [{ "item": "Dragalgite", "form": "dragalgemega" }],
+    "hawlucha": [{ "item": "Hawluchanite", "form": "hawluchamega" }],
+    "zygarde": [{ "item": "Zygardite", "form": "zygardemega" }],
+    "drampa": [{ "item": "Drampanite", "form": "drampamega" }],
+    "falinks": [{ "item": "Falinksite", "form": "falinksmega" }],
+    "raichu": [
+        { "item": "Raichunite X", "form": "raichumegax" },
+        { "item": "Raichunite Y", "form": "raichumegay" }
+    ],
+    "chimecho": [{ "item": "Chimechite", "form": "chimechomega" }],
+    "staraptor": [{ "item": "Staraptite", "form": "staraptormega" }],
+    "heatran": [{ "item": "Heatranite", "form": "heatranmega" }],
+    "darkrai": [{ "item": "Darkranite", "form": "darkraimega" }],
+    "golurk": [{ "item": "Golurkite", "form": "golurkmega" }],
+    "meowstic": [{ "item": "Meowsticite", "form": "meowsticmmega" }],
+    "meowsticf": [{ "item": "Meowsticite", "form": "meowsticfmega" }],
+    "crabominable": [{ "item": "Crabominite", "form": "crabominablemega" }],
+    "golisopod": [{ "item": "Golisopite", "form": "golisopodmega" }],
+    "magearna": [{ "item": "Magearnite", "form": "magearnamega" }],
+    "zeraora": [{ "item": "Zeraorite", "form": "zeraoramega" }],
+    "scovillain": [{ "item": "Scovillainite", "form": "scovillainmega" }],
+    "glimmora": [{ "item": "Glimmoranite", "form": "glimmoramega" }],
+    "tatsugiri": [{ "item": "Tatsugirinite", "form": "tatsugirimega" }],
+    "tatsugiridroopy": [{ "item": "Tatsugirinite", "form": "tatsugirimega" }],
+    "tatsugiristretchy": [{ "item": "Tatsugirinite", "form": "tatsugirimega" }],
+    "baxcalibur": [{ "item": "Baxcalibrite", "form": "baxcaliburmega" }],
+}
+
+
+def get_mega_form(mon_code:str, mon_data:dict) -> str:
+    if mon_code not in item_change_forms:
+        return ""
+
+    for item_change in item_change_forms[mon_code]:
+        if mon_data['item'] == item_change['item']:
+            altform = item_change['form']
+
+            if altform.endswith(('mega', 'megax', 'megay', 'megaz')):
+                return altform
+
+    return ""
+
+
+def is_mega_form(mon_code:str) -> bool:
+    return mon_code.endswith(('mega', 'megax', 'megay', 'megaz'))
+
+
+mega_stone_to_mega = {
+    "venusaurite": "venusaurmega",
+    "charizarditex": "charizardmegax",
+    "charizarditey": "charizardmegay",
+    "blastoisinite": "blastoisemega",
+    "alakazite": "alakazammega",
+    "gengarite": "gengarmega",
+    "kangaskhanite": "kangaskhanmega",
+    "pinsirite": "pinsirmega",
+    "gyaradosite": "gyaradosmega",
+    "aerodactylite": "aerodactylmega",
+    "mewtwonitex": "mewtwomegax",
+    "mewtwonitey": "mewtwomegay",
+    "ampharosite": "ampharosmega",
+    "scizorite": "scizormega",
+    "heracronite": "heracrossmega",
+    "houndoominite": "houndoommega",
+    "tyranitarite": "tyranitarmega",
+    "blazikenite": "blazikenmega",
+    "gardevoirite": "gardevoirmega",
+    "mawilite": "mawilemega",
+    "aggronite": "aggronmega",
+    "medichamite": "medichammega",
+    "manectite": "manectricmega",
+    "banettite": "banettemega",
+    "absolite": "absolmega",
+    "absolitez": "absolmegaz",
+    "garchompite": "garchompmega",
+    "garchompitez": "garchompmegaz",
+    "lucarionite": "lucariomega",
+    "lucarionitez": "lucariomegaz",
+    "abomasite": "abomasnowmega",
+    "latiosite": "latiosmega",
+    "latiasite": "latiasmega",
+    "swampertite": "swampertmega",
+    "sceptilite": "sceptilemega",
+    "sablenite": "sableyemega",
+    "altarianite": "altariamega",
+    "galladite": "gallademega",
+    "audinite": "audinomega",
+    "sharpedonite": "sharpedomega",
+    "slowbronite": "slowbromega",
+    "steelixite": "steelixmega",
+    "pidgeotite": "pidgeotmega",
+    "glalitite": "glaliemega",
+    "diancite": "dianciemega",
+    "metagrossite": "metagrossmega",
+    "blue orb": "kyogreprimal",
+    "red orb": "groudonprimal",
+    "cameruptite": "cameruptmega",
+    "lopunnite": "lopunnymega",
+    "salamencite": "salamencemega",
+    "beedrillite": "beedrillmega",
+    "clefablite": "clefablemega",
+    "victreebelite": "victreebelmega",
+    "starminite": "starmiemega",
+    "dragoninite": "dragonitemega",
+    "meganiumite": "meganiummega",
+    "feraligite": "feraligatrmega",
+    "skarmorite": "skarmorymega",
+    "froslassite": "froslassmega",
+    "emboarite": "emboarmega",
+    "excadrite": "excadrillmega",
+    "scolipite": "scolipedemega",
+    "scraftinite": "scraftymega",
+    "eelektrossite": "eelektrossmega",
+    "chandelurite": "chandeluremega",
+    "chesnaughtite": "chesnaughtmega",
+    "delphoxite": "delphoxmega",
+    "greninjite": "greninjamega",
+    "pyroarite": "pyroarmega",
+    "floettite": "floettemega",
+    "malamarite": "malamarmega",
+    "barbaracite": "barbaraclemega",
+    "dragalgite": "dragalgemega",
+    "hawluchanite": "hawluchamega",
+    "zygardite": "zygardemega",
+    "drampanite": "drampamega",
+    "falinksite": "falinksmega",
+    "raichunitex": "raichumegax",
+    "raichunitey": "raichumegay",
+    "chimechite": "chimechomega",
+    "staraptite": "staraptormega",
+    "heatranite": "heatranmega",
+    "darkranite": "darkraimega",
+    "golurkite": "golurkmega",
+    "meowsticite": "meowsticmmega",
+    "meowsticite": "meowsticfmega",
+    "crabominite": "crabominablemega",
+    "golisopite": "golisopodmega",
+    "magearnite": "magearnamega",
+    "zeraorite": "zeraoramega",
+    "scovillainite": "scovillainmega",
+    "glimmoranite": "glimmoramega",
+    "tatsugirinite": "tatsugirimega",
+    "baxcalibrite": "baxcaliburmega",
+}
+
+
+def get_mega_from_stone(item_code:str) -> str | None:
+    if item_code in mega_stone_to_mega:
+        return mega_stone_to_mega[item_code]
+
     return None

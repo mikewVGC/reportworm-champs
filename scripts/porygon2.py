@@ -93,6 +93,9 @@ def main():
             if event_info['game'] != "Champions":
                 continue
 
+            if event_info['status'] != "complete":
+                continue
+
             event = {}
             try:
                 with open(f"{config['data_dir']}/{year}/{event_info['code']}.json") as file:

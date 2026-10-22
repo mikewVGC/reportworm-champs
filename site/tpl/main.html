@@ -4,20 +4,6 @@ __TPL_HEAD__
 
 <main id="app">
 
-    <nav id="sites-nav">
-        <input type="checkbox" id="menu-toggle" aria-label="Toggle Menu" />
-        <label for="menu-toggle" class="menu-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-        <div class="nav-items">
-        <div v-for="site in sitesNav" :class="{ active: site.active }">
-            <a :href="`${site.url}`" v-html="site.name" data-pass="1" target="_blank"></a>
-        </div>
-        </div>
-    </nav>
-
     __TPL_HEADER__
 
     <component
@@ -533,7 +519,7 @@ __TPL_HEAD__
 
         <div class="usage-col usage-col-player">
 
-            <h3>Player Info</h3>
+            <h3>Player Results</h3>
 
             <table id="player-info" class="two-col-info">
                 <tr>
@@ -630,7 +616,7 @@ __TPL_HEAD__
             <tr v-for="event in filterEvents(player.events)">
                 <td>
                     <a 
-                        :href="`https://standings.reportworm.com/${event.year}/${event.code}`"
+                        :href="`https://standings.reportworm.com/${event.year}/${event.code}/player/${player.code}`"
                         target="_blank"
                         data-pass="1"
                     >{{ event.name }}<div class="sm-icon ext-link-icon"></div></a><br />
@@ -683,7 +669,6 @@ const app = createApp(App).mount('#app');
 app.setBootstrapData({
     spriteCoords: JSON.parse('__SPRITE_COORDS_DATA__'),
     info: JSON.parse('__FORMAT_SEASON_DATA__'),
-    sitesNav: JSON.parse('__SITES_NAV_DATA__'),
 });
 
 app.init();

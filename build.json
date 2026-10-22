@@ -100,11 +100,6 @@
                     "location": "data/common/info.json"
                 },
                 {
-                    "token": "__SITES_NAV_DATA__",
-                    "type": "file",
-                    "location": "data/common/sites-nav.json"
-                },
-                {
                     "token": "__SCRIPT_FILE__",
                     "type": "flag",
                     "name": "mode",
@@ -117,6 +112,11 @@
                     "token": "__NAME_CORRECTION__",
                     "type": "tpl",
                     "ref": "name-corrections"
+                },
+                {
+                    "token": "__YEAR__",
+                    "type": "date",
+                    "value": "year"
                 }
             ]
         }

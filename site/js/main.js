@@ -216,15 +216,14 @@ export default {
             // main listener that lets us have nice looking urls
             window.addEventListener('click', (e) => {
                 if (e.target && e.target.closest('a')) {
-                    if ('pass' in e.target.dataset && e.target.dataset.pass == 1) {
+                    const anchor = e.target.closest('a');
+                    if ('pass' in anchor.dataset && anchor.dataset.pass == 1) {
                         return;
                     }
 
                     if (e.metaKey || e.ctrlKey) {
                         return;
                     }
-
-                    const anchor = e.target.closest('a');
 
                     e.preventDefault();
 

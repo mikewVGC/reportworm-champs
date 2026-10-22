@@ -5,7 +5,12 @@ import json
 import os
 from dataclasses import dataclass, field
 
-from lib.formes import get_mon_alt_from_code
+from lib.formes import (
+    get_mon_alt_from_code,
+    get_mega_form,
+    is_mega_form,
+    get_mega_from_stone,
+)
 from lib.util import get_regulation_code
 
 class Mon():
@@ -77,14 +82,20 @@ class MonStats():
             for mon in team:
                 mon_code = mon['code']
 
+                mega_form = get_mega_form(mon_code, mon)
+                if len(mega_form):
+                    mon_code = mega_form
+
                 # general setup + overall total
                 if mon_code not in self.all_mons:
-                    alt = get_mon_alt_from_code(mon_code)
+                    dex = mon['dex']
+                    if len(mega_form):
+                        dex = get_mon_alt_from_code(mon_code)
 
                     self.all_mons[mon_code] = Mon(
                         code=mon_code,
-                        name=mon['name'],
-                        dex=alt if alt else mon['dex'],
+                        name=mon['altname'] if len(mega_form) else mon['name'],
+                        dex=dex,
                     )
 
                 if pcode not in self.all_mons[mon_code].get_info('all').players:
@@ -123,68 +134,93 @@ class MonStats():
     def process_usage(self, usage:dict, event_info:dict, year:int):
         event_key = f"{year}-{event_info['code']}"
         ruleset = get_regulation_code(event_info['format'])
-        for mon in usage:
-            mon_code = mon['code']
+        for base_mon in usage:
+            forms = [ base_mon, *base_mon['forms'] ]
 
-            if mon_code not in self.all_mons:
-                print(f"Unable to find '{mon_code}' in usage, skipping")
-                continue
+            if len(forms) > 1:
+                for mon in forms:
+                    # adjust the counts for the base form
+                    if is_mega_form(mon['code']):
+                        forms[0]['counts']['total'] -= mon['counts']['total']
+                        forms[0]['counts']['points'] -= mon['counts']['points']
+                        forms[0]['counts']['phase2'] -= mon['counts']['phase2']
+                        forms[0]['counts']['cut'] -= mon['counts']['cut']
 
-            # event specific stats
-            self.all_mons[mon_code].get_info('all').events[event_key]['total'] = mon['counts']['total']
-            self.all_mons[mon_code].get_info('all').events[event_key]['totpct'] = mon['counts']['total'] / event_info['playerCount']
-            self.all_mons[mon_code].get_info('all').events[event_key]['points'] = mon['counts']['points']
-            self.all_mons[mon_code].get_info('all').events[event_key]['ptspct'] = mon['counts']['points'] / event_info['points']
-            self.all_mons[mon_code].get_info('all').events[event_key]['phase2'] = mon['counts']['phase2']
-            if event_info['phase2Count']:
-                self.all_mons[mon_code].get_info('all').events[event_key]['p2pct'] = mon['counts']['phase2'] / event_info['phase2Count']
-            self.all_mons[mon_code].get_info('all').events[event_key]['cut'] = mon['counts']['cut']
-            if event_info['cutCount']:
-                self.all_mons[mon_code].get_info('all').events[event_key]['cutpct'] = mon['counts']['cut'] / event_info['cutCount']
+            for mon in forms:
+                mon_code = mon['code']
+                is_mega = is_mega_form(mon_code)
 
-            # alltime stats
-            self.all_mons[mon_code].get_info('all').total += mon['counts']['total']
-            self.all_mons[mon_code].get_info('all').points += mon['counts']['points']
-            self.all_mons[mon_code].get_info('all').phase2 += mon['counts']['phase2']
-            self.all_mons[mon_code].get_info('all').cut += mon['counts']['cut']
+                if mon_code not in self.all_mons:
+                    # mon doesn't exist at all
+                    print(f"Unable to find '{mon_code}' in usage, skipping")
+                    continue
 
-            # item stats
-            for item in mon['items']:
-                icode = item['code']
-                if icode not in self.all_mons[mon_code].get_info('all').items:
-                    self.all_mons[mon_code].get_info('all').items[icode] = {
-                        "name": item['name'],
-                        "code": icode,
-                        "count": 0,
-                    }
+                if event_key not in self.all_mons[mon_code].get_info('all').events:
+                    # mon doesn't exist specifically on this event
+                    print(f"'{mon_code}' not in event '{event_key}', skipping")
+                    continue
 
-                #if isinstance(item['count'], dict):
-                #    print(item)
+                # event specific stats
+                self.all_mons[mon_code].get_info('all').events[event_key]['total'] = mon['counts']['total']
+                self.all_mons[mon_code].get_info('all').events[event_key]['totpct'] = mon['counts']['total'] / event_info['playerCount']
+                self.all_mons[mon_code].get_info('all').events[event_key]['points'] = mon['counts']['points']
+                self.all_mons[mon_code].get_info('all').events[event_key]['ptspct'] = mon['counts']['points'] / event_info['points']
+                self.all_mons[mon_code].get_info('all').events[event_key]['phase2'] = mon['counts']['phase2']
+                if event_info['phase2Count']:
+                    self.all_mons[mon_code].get_info('all').events[event_key]['p2pct'] = mon['counts']['phase2'] / event_info['phase2Count']
+                self.all_mons[mon_code].get_info('all').events[event_key]['cut'] = mon['counts']['cut']
+                if event_info['cutCount']:
+                    self.all_mons[mon_code].get_info('all').events[event_key]['cutpct'] = mon['counts']['cut'] / event_info['cutCount']
 
-                self.all_mons[mon_code].get_info('all').items[icode]['count'] += item['count']['total']
+                # alltime stats
+                self.all_mons[mon_code].get_info('all').total += mon['counts']['total']
+                self.all_mons[mon_code].get_info('all').points += mon['counts']['points']
+                self.all_mons[mon_code].get_info('all').phase2 += mon['counts']['phase2']
+                self.all_mons[mon_code].get_info('all').cut += mon['counts']['cut']
 
-            # tera stats
-            for tera in mon['teras']:
-                tera_type = tera['name']
-                if tera_type not in self.all_mons[mon_code].get_info('all').teras:
-                    self.all_mons[mon_code].get_info('all').teras[tera_type] = {
-                        "name": tera_type,
-                        "count": 0,
-                    }
+                # item stats
+                if 'items' not in mon:
+                    mon['items'] = []
 
-                self.all_mons[mon_code].get_info('all').teras[tera_type]['count'] += tera['count']['total']
+                for item in mon['items']:
+                    icode = item['code']
+                    is_mega_item = get_mega_from_stone(icode)
+                    m_item_code = mon_code
+                    if is_mega_item or mon_code == is_mega_item:
+                        m_item_code = is_mega_item
 
-            # season stats
-            self.all_mons[mon_code].get_info(year).total += mon['counts']['total']
-            self.all_mons[mon_code].get_info(year).points += mon['counts']['points']
-            self.all_mons[mon_code].get_info(year).phase2 += mon['counts']['phase2']
-            self.all_mons[mon_code].get_info(year).cut += mon['counts']['cut']
+                    if icode not in self.all_mons[m_item_code].get_info('all').items:
+                        self.all_mons[m_item_code].get_info('all').items[icode] = {
+                            "name": item['name'],
+                            "code": icode,
+                            "count": 0,
+                        }
 
-            # ruleset / format stats
-            self.all_mons[mon_code].get_info(ruleset).total += mon['counts']['total']
-            self.all_mons[mon_code].get_info(ruleset).points += mon['counts']['points']
-            self.all_mons[mon_code].get_info(ruleset).phase2 += mon['counts']['phase2']
-            self.all_mons[mon_code].get_info(ruleset).cut += mon['counts']['cut']
+                    self.all_mons[m_item_code].get_info('all').items[icode]['count'] += item['count']['total']
+
+                # tera stats
+                if 'teras' in mon:
+                    for tera in mon['teras']:
+                        tera_type = tera['name']
+                        if tera_type not in self.all_mons[mon_code].get_info('all').teras:
+                            self.all_mons[mon_code].get_info('all').teras[tera_type] = {
+                                "name": tera_type,
+                                "count": 0,
+                            }
+
+                        self.all_mons[mon_code].get_info('all').teras[tera_type]['count'] += tera['count']['total']
+
+                # season stats
+                self.all_mons[mon_code].get_info(year).total += mon['counts']['total']
+                self.all_mons[mon_code].get_info(year).points += mon['counts']['points']
+                self.all_mons[mon_code].get_info(year).phase2 += mon['counts']['phase2']
+                self.all_mons[mon_code].get_info(year).cut += mon['counts']['cut']
+
+                # ruleset / format stats
+                self.all_mons[mon_code].get_info(ruleset).total += mon['counts']['total']
+                self.all_mons[mon_code].get_info(ruleset).points += mon['counts']['points']
+                self.all_mons[mon_code].get_info(ruleset).phase2 += mon['counts']['phase2']
+                self.all_mons[mon_code].get_info(ruleset).cut += mon['counts']['cut']
 
 
     def dump_all(self):
