@@ -356,6 +356,7 @@ export default {
                 this.mons.forEach(m => {
                     m.phase2Conversion = m.phase2 / m.total;
                     m.cutConversion = m.cut / m.phase2;
+                    m.winRate = m.match_wins / (m.match_losses + m.match_wins);
                 });
             });
         },

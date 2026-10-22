@@ -141,6 +141,11 @@ __TPL_HEAD__
                 >Total</th>
                 <th
                     class="sortable"
+                    :class="getSortedClass('winRate')"
+                    @click="sortStats('winRate')"
+                >Win Rate</th>
+                <th
+                    class="sortable"
                     :class="getSortedClass('points')"
                     @click="sortStats('points')"
                 >Points</th>
@@ -183,6 +188,7 @@ __TPL_HEAD__
                 </td>
                 <td><a :href="`/mon/${mon.code}`">{{ mon.name }}</a></td>
                 <td>{{ mon.total.toLocaleString() }}</td>
+                <td>{{ getPct(mon.winRate) }}</td>
                 <td>{{ mon.points.toLocaleString() }}</td>
                 <td>{{ mon.phase2.toLocaleString() }}</td>
                 <td>{{ getPct(mon.phase2Conversion) }}</td>
@@ -229,6 +235,10 @@ __TPL_HEAD__
                 <tr>
                     <td>Event Wins</td>
                     <td>{{ monStats.wins }}</td>
+                </tr>
+                <tr>
+                    <td>Win Rate</td>
+                    <td>{{ getPct(monStats.match_wins / (monStats.match_wins + monStats.match_losses)) }}</td>
                 </tr>
             </table>
 

@@ -286,7 +286,7 @@ ul.top-menu li:nth-child(2) {
     background-repeat: no-repeat;
     background-position: 5% 100%;
     background-size: auto 260px;
-    padding-bottom: 2.5em;
+    padding-bottom: 3.25em;
 }
 
 .usage-col {
@@ -379,6 +379,10 @@ table#rival-players td {
 
 table#rival-players td:first-child {
     width: 30%;
+}
+
+table#mon-items td {
+    white-space: nowrap;
 }
 
 table#attended-events th {
