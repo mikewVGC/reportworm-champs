@@ -56,7 +56,7 @@ __TPL_HEAD__
     </div>
 
     <h2 @click="toggleCredits()" id="creditsTitle">
-        Site Credits 
+        Credits
         <span v-if="!showCredits" v-cloak>&#9656;</span>
         <span v-if="showCredits" v-cloak>&#9662;</span>
     </h2>
@@ -204,7 +204,7 @@ __TPL_HEAD__
 <template id="mon-template">
 
     <div
-        v-if="monLoaded"
+        v-if="'dex' in monStats"
         class="mon-stats-container"
         :style="{ backgroundImage: `url(https://reportworm-standings.us-east-1.linodeobjects.com/team-img/${monStats.dex}.png` }"
     >
@@ -296,6 +296,8 @@ __TPL_HEAD__
             <option v-for="regName in this.monRegs" :value="regName">{{ regName }}</option>
         </select>
     </div>
+
+    <div class="mon-usage-graph-container"><canvas id="mon-usage-graph"></canvas></div>
 
     <table id="mon-events">
         <thead>
@@ -671,6 +673,10 @@ __TPL_HEAD__
 __VUE__
 
 <script type="module">
+import { Chart, registerables } from 'chart';
+
+Chart.register(...registerables);
+
 import { createApp } from 'vue';
 import App from '__SCRIPT_FILE__';
 export default App;
@@ -679,7 +685,10 @@ const app = createApp(App).mount('#app');
 app.setBootstrapData({
     spriteCoords: JSON.parse('__SPRITE_COORDS_DATA__'),
     info: JSON.parse('__FORMAT_SEASON_DATA__'),
+    sitesNav: JSON.parse('__SITES_NAV_DATA__'),
 });
+
+app.setChart(Chart);
 
 app.init();
 </script>

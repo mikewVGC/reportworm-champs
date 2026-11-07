@@ -1,6 +1,8 @@
 export default {
     data() {
         return {
+            Chart: null,
+
             currentRoute: '',
 
             currentView: 'loading',
@@ -120,6 +122,7 @@ export default {
                         monSeasons: this.monSeasons,
                         resultsFilter: this.resultsFilter,
                         filteredEvents: this.filteredEvents,
+                        Chart: this.Chart,
                     };
 
                 case 'players-list':
@@ -297,6 +300,10 @@ export default {
                 route = 'home';
             }
             this.currentRoute = route;
+        },
+
+        setChart(chart) {
+            this.Chart = chart;
         },
 
         toggleCredits() {
@@ -561,6 +568,9 @@ export default {
         'home': {
             template: '#home-template',
             props: [ 'showCredits' ],
+            emits: [
+                'search',
+            ],
             methods: {
                 toggleCredits() {
                     this.$parent.toggleCredits();
@@ -639,25 +649,41 @@ export default {
                 'monSeasons',
                 'resultsFilter',
                 'filteredEvents',
+                'Chart',
             ],
             emits: [
                 'search',
             ],
+            usageGraph: false,
+            mediaQuery: null,
             mounted: function() {
                 let chunks = this.$parent.currentRoute.split('/');
                 this.$parent.getMon(chunks[1]);
+
+                this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+                this.mediaQuery.addEventListener('change', this.graphUpdate);
+            },
+            beforeUnmount: function() {
+                this.mediaQuery.removeEventListener('change', this.graphUpdate);
+            },
+            updated: function() {
+                this.makeGraph();
             },
             methods: {
+                graphUpdate() {
+                    this.usageGraph.update();
+                },
                 getSortedClass(column) {
                     return this.$parent.getSortedClass('event', column);
                 },
                 updateSeasonFilter(e) {
                     this.$parent.updateResultFilter('reg', 'all');
-                    return this.$parent.updateResultFilter('season', e.target.value);
+                    this.$parent.updateResultFilter('season', e.target.value);
                 },
                 updateRegFilter(e) {
                     this.$parent.updateResultFilter('season', 'all');
-                    return this.$parent.updateResultFilter('reg', e.target.value);
+                    this.$parent.updateResultFilter('reg', e.target.value);
                 },
                 sortEvents(column) {
                     return this.$parent.sortData('monStats.events', 'event', column);
@@ -667,6 +693,71 @@ export default {
                 },
                 getSpritePos(name) {
                     return this.$parent.getSpritePos(name);
+                },
+                isDarkMode() {
+                    if (!this.mediaQuery) {
+                        return false;
+                    }
+                    return this.mediaQuery.matches;
+                },
+                makeGraph() {
+                    if (!this.usageGraph) {
+
+                        const theme = {
+                            text: () => this.isDarkMode() ? '#E4E4E4' : '#666666',
+                            grid: () => this.isDarkMode() ? '#444444' : '#F0F0F0',
+                        };
+
+                        this.usageGraph = new this.Chart(
+                            document.getElementById('mon-usage-graph'),
+                            {
+                                type: 'line',
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    tension: .25,
+                                    scales: {
+                                        x: {
+                                            ticks: { color: theme.text },
+                                            grid: { color: theme.grid },
+                                        },
+                                        y: {
+                                            title: {
+                                                text: "Percent Usage (%)",
+                                                display: true,
+                                                color: theme.text
+                                            },
+                                            ticks: { color: theme.text },
+                                            grid: { color: theme.grid },
+                                        },
+                                    },
+                                },
+                                data: {
+                                    labels: [],
+                                    datasets: [],
+                                },
+                            }
+                        );
+                    }
+
+                    this.usageGraph.data.labels = this.filteredEvents.map(e => e.name);
+
+                    this.usageGraph.data.datasets = [
+                        {
+                            label: 'Total Usage',
+                            data: this.filteredEvents.map(e => e.totpct * 100),
+                        },
+                        {
+                            label: 'Phase 2',
+                            data: this.filteredEvents.map(e => e.p2pct * 100),
+                        },
+                        {
+                            label: 'Top Cut',
+                            data: this.filteredEvents.map(e => e.cutpct * 100),
+                        },
+                    ];
+
+                    this.graphUpdate();
                 },
             },
         },

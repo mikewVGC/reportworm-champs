@@ -217,6 +217,21 @@ class MonStats():
 
                     self.all_mons[item_mon].get_info('all').items[icode]['count'] += item['count']['total']
 
+
+                # these aren't separated in the data
+                """
+                natures = mon.get('natures', [])
+
+                for nature in natures:
+                    nature_name = nature['name']
+                    if nature not in self.all_mons[mon_code].get_info('all').natures:
+                        self.all_mons[mon_code].get_info('all').natures[nature_name] = {
+                            "name": nature_name,
+                            "count": 0,
+                        }
+                """
+
+
                 # not in champs (yet?)
                 """
                 # tera stats
