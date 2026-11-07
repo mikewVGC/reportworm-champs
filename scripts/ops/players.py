@@ -110,7 +110,7 @@ class PlayerStats():
                 if change_opp:
                     opp_code = change_opp['code']
 
-                if opp['opp'] not in self.all_players[pcode].get_info('all').rivals:
+                if opp_code not in self.all_players[pcode].get_info('all').rivals:
                     self.all_players[pcode].get_info('all').rivals[opp_code] = {
                         "code": opp_code,
                         "name": "",
