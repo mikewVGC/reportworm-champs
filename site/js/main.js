@@ -731,6 +731,15 @@ export default {
                                             grid: { color: theme.grid },
                                         },
                                     },
+                                    plugins: {
+                                        tooltip: {
+                                            callbacks: {
+                                                label: (ctx) => {
+                                                    return this.getPct(ctx.raw / 100);
+                                                },
+                                            },
+                                        },
+                                    },
                                 },
                                 data: {
                                     labels: [],
