@@ -735,7 +735,7 @@ export default {
                                         tooltip: {
                                             callbacks: {
                                                 label: (ctx) => {
-                                                    return this.getPct(ctx.raw / 100);
+                                                    return `${this.getPct(ctx.raw / 100)} (${ctx.dataset.label})`;
                                                 },
                                             },
                                         },
